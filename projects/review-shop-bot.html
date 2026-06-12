@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Бот продажи отзывов — Кейс</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:#0c0c0f; --bg2:#13131a; --bg3:#1a1a24; --bg4:#202030;
+    --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
+    --text:#e8e8f0; --muted:#7a7a90;
+    --accent:#7c6ff7; --accent2:#5b9cf6; --green:#4ade80; --warn:#fbbf24;
+    --mono:'JetBrains Mono',monospace; --sans:'Inter',sans-serif;
+  }
+  body { background:var(--bg); color:var(--text); font-family:var(--sans); font-size:15px; line-height:1.7; -webkit-font-smoothing:antialiased; }
+
+  nav { position:sticky;top:0;z-index:50; background:rgba(12,12,15,0.9); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); height:52px; display:flex; align-items:center; justify-content:space-between; padding:0 clamp(1.5rem,5vw,4rem); }
+  nav a { text-decoration:none; }
+  .nav-back { font-size:13px; color:var(--muted); display:flex; align-items:center; gap:6px; transition:color 0.2s; }
+  .nav-back:hover { color:var(--text); }
+  .nav-badge { font-family:var(--mono); font-size:11px; color:var(--accent); background:rgba(124,111,247,0.1); padding:4px 10px; border-radius:20px; }
+
+  .hero { padding:4rem clamp(1.5rem,5vw,4rem) 3rem; max-width:960px; margin:0 auto; }
+  .case-eyebrow { font-family:var(--mono); font-size:11px; color:var(--accent); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1rem; }
+  h1 { font-size:clamp(1.8rem,4vw,2.8rem); font-weight:600; letter-spacing:-0.025em; line-height:1.15; margin-bottom:1rem; }
+  .hero-desc { font-size:16px; color:var(--muted); max-width:600px; line-height:1.75; margin-bottom:2rem; }
+
+  .meta-row { display:flex; flex-wrap:wrap; gap:1.5rem; margin-bottom:3rem; padding-bottom:3rem; border-bottom:1px solid var(--border); }
+  .meta-item label { font-size:11px; font-family:var(--mono); color:var(--muted); letter-spacing:0.06em; text-transform:uppercase; display:block; margin-bottom:4px; }
+  .meta-item span { font-size:14px; font-weight:500; }
+  .tag { font-family:var(--mono); font-size:11px; color:var(--muted); background:var(--bg3); padding:3px 9px; border-radius:4px; display:inline-block; margin-right:6px; margin-bottom:6px; }
+
+  .content { max-width:960px; margin:0 auto; padding:0 clamp(1.5rem,5vw,4rem) 5rem; }
+  h2 { font-size:1.4rem; font-weight:600; letter-spacing:-0.02em; margin:3rem 0 1.25rem; }
+  h3 { font-size:1rem; font-weight:500; margin:1.5rem 0 0.75rem; color:var(--text); }
+  p { color:var(--muted); font-size:14px; line-height:1.75; margin-bottom:1rem; }
+
+  .feature-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:2rem; }
+  .feature-item { background:var(--bg2); padding:1.25rem 1.5rem; }
+  .feature-icon { font-size:20px; margin-bottom:0.5rem; }
+  .feature-item h4 { font-size:13px; font-weight:500; margin-bottom:4px; }
+  .feature-item p { font-size:12px; color:var(--muted); margin:0; }
+
+  .code-block { background:var(--bg2); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin:1.5rem 0; }
+  .code-header { display:flex; align-items:center; justify-content:space-between; padding:0.75rem 1rem; border-bottom:1px solid var(--border); }
+  .code-filename { font-family:var(--mono); font-size:12px; color:var(--muted); display:flex; align-items:center; gap:8px; }
+  .code-dot { width:8px; height:8px; border-radius:50%; }
+  .dot-r{background:#ff5f57;} .dot-y{background:#ffbd2e;} .dot-g{background:#28c840;}
+  .code-copy { font-family:var(--mono); font-size:11px; color:var(--muted); background:transparent; border:1px solid var(--border); padding:4px 10px; border-radius:6px; cursor:pointer; transition:all 0.15s; font-family:inherit; }
+  .code-copy:hover { color:var(--text); border-color:var(--border2); }
+  pre { padding:1.25rem; overflow-x:auto; font-family:var(--mono); font-size:12.5px; line-height:1.65; color:#c9d1d9; }
+  .kw { color:#ff7b72; } .fn { color:#d2a8ff; } .st { color:#a5d6ff; }
+  .cm { color:#8b949e; font-style:italic; } .num { color:#79c0ff; } .at { color:#ffa657; }
+
+  .schema-wrap { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:1.5rem; margin:1.5rem 0; }
+  .schema-title { font-family:var(--mono); font-size:11px; color:var(--accent); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:1rem; }
+  .schema-row { display:flex; gap:0.75rem; margin-bottom:0.5rem; align-items:flex-start; }
+  .schema-arrow { color:var(--muted); font-size:13px; padding-top:2px; flex-shrink:0; }
+  .schema-step { font-size:13px; }
+  .schema-step strong { color:var(--text); font-weight:500; }
+  .schema-step span { color:var(--muted); }
+
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--muted); font-size:13px; text-decoration:none; margin-top:3rem; }
+  .back-link:hover { color:var(--text); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-back">← Назад к портфолио</a>
+  <span class="nav-badge">Telegram Bot</span>
+</nav>
+
+<div class="hero">
+  <p class="case-eyebrow">Кейс — Telegram бот</p>
+  <h1>Бот продажи отзывов</h1>
+  <p class="hero-desc">
+    Бот для продажи батчей уникальных текстов отзывов по тарифам.
+    Покупка через Telegram Stars, автоматическая выдача файлов, личный кабинет, админ-панель.
+  </p>
+
+  <div class="meta-row">
+    <div class="meta-item">
+      <label>Стек</label>
+      <span>
+        <span class="tag">python-telegram-bot</span>
+        <span class="tag">SQLite</span>
+        <span class="tag">Stars API</span>
+      </span>
+    </div>
+    <div class="meta-item">
+      <label>Срок</label>
+      <span>2 дня</span>
+    </div>
+    <div class="meta-item">
+      <label>Статус</label>
+      <span style="color:var(--green);">✓ В продакшне</span>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+  <h2>Что делает бот</h2>
+  <div class="feature-grid">
+    <div class="feature-item">
+      <div class="feature-icon">📦</div>
+      <h4>Тарифы и батчи</h4>
+      <p>Три тарифа с разным количеством отзывов. Покупатель выбирает нужный объём.</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">⭐</div>
+      <h4>Оплата Stars</h4>
+      <p>Нативная оплата через Telegram Stars без внешних платёжных шлюзов.</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">📄</div>
+      <h4>Авто-выдача</h4>
+      <p>После оплаты бот сразу отправляет файл с отзывами. Вручную ничего делать не нужно.</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">📊</div>
+      <h4>Админ-панель</h4>
+      <p>Статистика продаж, управление тарифами, загрузка новых батчей прямо в боте.</p>
+    </div>
+  </div>
+
+  <h2>Поток данных</h2>
+  <div class="schema-wrap">
+    <div class="schema-title">User flow</div>
+    <div class="schema-row"><span class="schema-arrow">→</span><div class="schema-step"><strong>/start</strong> <span>— приветствие, главное меню</span></div></div>
+    <div class="schema-row"><span class="schema-arrow">→</span><div class="schema-step"><strong>Купить отзывы</strong> <span>— показ тарифов с ценами в Stars</span></div></div>
+    <div class="schema-row"><span class="schema-arrow">→</span><div class="schema-step"><strong>Выбор тарифа</strong> <span>— инвойс через sendInvoice</span></div></div>
+    <div class="schema-row"><span class="schema-arrow">→</span><div class="schema-step"><strong>pre_checkout_query</strong> <span>— валидация, проверка наличия файла</span></div></div>
+    <div class="schema-row"><span class="schema-arrow">→</span><div class="schema-step"><strong>successful_payment</strong> <span>— запись в БД, отправка файла</span></div></div>
+    <div class="schema-row"><span class="schema-arrow">→</span><div class="schema-step"><strong>Мои заказы</strong> <span>— история покупок с повторной выдачей</span></div></div>
+  </div>
+
+  <h2>Исходный код</h2>
+  <h3>bot.py — точка входа</h3>
+  <div class="code-block">
+    <div class="code-header">
+      <div class="code-filename">
+        <span class="code-dot dot-r"></span><span class="code-dot dot-y"></span><span class="code-dot dot-g"></span>
+        bot.py
+      </div>
+      <button class="code-copy" onclick="copyCode(this, 'code1')">copy</button>
+    </div>
+    <pre id="code1"><span class="kw">import</span> logging
+<span class="kw">from</span> telegram <span class="kw">import</span> Update
+<span class="kw">from</span> telegram.ext <span class="kw">import</span> (
+    Application, CommandHandler, CallbackQueryHandler,
+    PreCheckoutQueryHandler, MessageHandler, filters
+)
+<span class="kw">from</span> config <span class="kw">import</span> BOT_TOKEN
+<span class="kw">from</span> handlers <span class="kw">import</span> start, catalog, payment, orders, admin
+<span class="kw">from</span> database <span class="kw">import</span> init_db
+
+logging.basicConfig(
+    format=<span class="st">"%(asctime)s - %(name)s - %(levelname)s - %(message)s"</span>,
+    level=logging.INFO
+)
+
+<span class="kw">async def</span> <span class="fn">main</span>():
+    <span class="kw">await</span> init_db()
+
+    app = Application.builder().token(BOT_TOKEN).build()
+
+    <span class="cm"># Основные команды</span>
+    app.add_handler(CommandHandler(<span class="st">"start"</span>, start.cmd_start))
+    app.add_handler(CommandHandler(<span class="st">"admin"</span>, admin.cmd_admin))
+
+    <span class="cm"># Каллбэки inline-кнопок</span>
+    app.add_handler(CallbackQueryHandler(catalog.show_plans, pattern=<span class="st">r"^catalog$"</span>))
+    app.add_handler(CallbackQueryHandler(payment.buy_plan, pattern=<span class="st">r"^buy_\d+$"</span>))
+    app.add_handler(CallbackQueryHandler(orders.my_orders, pattern=<span class="st">r"^orders$"</span>))
+    app.add_handler(CallbackQueryHandler(orders.resend_file, pattern=<span class="st">r"^resend_\d+$"</span>))
+    app.add_handler(CallbackQueryHandler(admin.admin_stats, pattern=<span class="st">r"^adm_stats$"</span>))
+    app.add_handler(CallbackQueryHandler(admin.admin_upload, pattern=<span class="st">r"^adm_upload_\d+$"</span>))
+
+    <span class="cm"># Платёжные хэндлеры (Stars)</span>
+    app.add_handler(PreCheckoutQueryHandler(payment.pre_checkout))
+    app.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, payment.successful_payment))
+
+    <span class="cm"># Загрузка файлов от админа</span>
+    app.add_handler(MessageHandler(filters.Document.ALL &amp; filters.ChatType.PRIVATE, admin.handle_file_upload))
+
+    <span class="kw">await</span> app.run_polling(drop_pending_updates=<span class="at">True</span>)
+
+<span class="kw">if</span> __name__ == <span class="st">"__main__"</span>:
+    <span class="kw">import</span> asyncio
+    asyncio.run(main())</pre>
+  </div>
+
+  <h3>handlers/payment.py — логика оплаты</h3>
+  <div class="code-block">
+    <div class="code-header">
+      <div class="code-filename">
+        <span class="code-dot dot-r"></span><span class="code-dot dot-y"></span><span class="code-dot dot-g"></span>
+        handlers/payment.py
+      </div>
+      <button class="code-copy" onclick="copyCode(this, 'code2')">copy</button>
+    </div>
+    <pre id="code2"><span class="kw">from</span> telegram <span class="kw">import</span> Update, LabeledPrice
+<span class="kw">from</span> telegram.ext <span class="kw">import</span> ContextTypes
+<span class="kw">from</span> database <span class="kw">import</span> get_plan, save_order, get_file_for_plan, mark_file_sent
+<span class="kw">from</span> config <span class="kw">import</span> ADMIN_ID
+
+PLANS = {
+    <span class="num">1</span>: {<span class="st">"name"</span>: <span class="st">"Стартовый"</span>, <span class="st">"reviews"</span>: <span class="num">50</span>, <span class="st">"stars"</span>: <span class="num">99</span>},
+    <span class="num">2</span>: {<span class="st">"name"</span>: <span class="st">"Стандарт"</span>, <span class="st">"reviews"</span>: <span class="num">150</span>, <span class="st">"stars"</span>: <span class="num">249</span>},
+    <span class="num">3</span>: {<span class="st">"name"</span>: <span class="st">"Профи"</span>, <span class="st">"reviews"</span>: <span class="num">400</span>, <span class="st">"stars"</span>: <span class="num">599</span>},
+}
+
+<span class="kw">async def</span> <span class="fn">buy_plan</span>(update: Update, ctx: ContextTypes) -> <span class="at">None</span>:
+    query = update.callback_query
+    <span class="kw">await</span> query.answer()
+
+    plan_id = <span class="fn">int</span>(query.data.split(<span class="st">"_"</span>)[<span class="num">1</span>])
+    plan = PLANS.get(plan_id)
+    <span class="kw">if not</span> plan:
+        <span class="kw">await</span> query.message.reply_text(<span class="st">"Тариф не найден."</span>)
+        <span class="kw">return</span>
+
+    <span class="kw">await</span> ctx.bot.send_invoice(
+        chat_id=query.from_user.id,
+        title=<span class="fn">f</span><span class="st">"Отзывы — тариф «{plan['name']}»"</span>,
+        description=<span class="fn">f</span><span class="st">"{plan['reviews']} уникальных текстов отзывов в формате TXT"</span>,
+        payload=<span class="fn">f</span><span class="st">"plan_{plan_id}"</span>,
+        currency=<span class="st">"XTR"</span>,  <span class="cm"># Telegram Stars</span>
+        prices=[LabeledPrice(plan[<span class="st">"name"</span>], plan[<span class="st">"stars"</span>])],
+    )
+
+<span class="kw">async def</span> <span class="fn">pre_checkout</span>(update: Update, ctx: ContextTypes) -> <span class="at">None</span>:
+    query = update.pre_checkout_query
+    plan_id = <span class="fn">int</span>(query.invoice_payload.split(<span class="st">"_"</span>)[<span class="num">1</span>])
+    file = <span class="kw">await</span> get_file_for_plan(plan_id)
+
+    <span class="kw">if not</span> file:
+        <span class="kw">await</span> query.answer(ok=<span class="at">False</span>, error_message=<span class="st">"Файлы временно недоступны. Попробуйте позже."</span>)
+    <span class="kw">else</span>:
+        <span class="kw">await</span> query.answer(ok=<span class="at">True</span>)
+
+<span class="kw">async def</span> <span class="fn">successful_payment</span>(update: Update, ctx: ContextTypes) -> <span class="at">None</span>:
+    payment = update.message.successful_payment
+    user_id = update.message.from_user.id
+    plan_id = <span class="fn">int</span>(payment.invoice_payload.split(<span class="st">"_"</span>)[<span class="num">1</span>])
+
+    file = <span class="kw">await</span> get_file_for_plan(plan_id)
+    order_id = <span class="kw">await</span> save_order(user_id, plan_id, payment.telegram_payment_charge_id)
+
+    <span class="kw">await</span> update.message.reply_document(
+        document=file[<span class="st">"file_id"</span>],
+        caption=<span class="fn">f</span><span class="st">"✅ Оплата прошла!\n\n"</span>
+                <span class="fn">f</span><span class="st">"Тариф: {PLANS[plan_id]['name']}\n"</span>
+                <span class="fn">f</span><span class="st">"Отзывов: {PLANS[plan_id]['reviews']} шт.\n\n"</span>
+                <span class="fn">f</span><span class="st">"Заказ №{order_id} сохранён в /orders"</span>
+    )
+    <span class="kw">await</span> mark_file_sent(file[<span class="st">"id"</span>])</pre>
+  </div>
+
+  <h3>database.py — работа с БД</h3>
+  <div class="code-block">
+    <div class="code-header">
+      <div class="code-filename">
+        <span class="code-dot dot-r"></span><span class="code-dot dot-y"></span><span class="code-dot dot-g"></span>
+        database.py
+      </div>
+      <button class="code-copy" onclick="copyCode(this, 'code3')">copy</button>
+    </div>
+    <pre id="code3"><span class="kw">import</span> aiosqlite
+
+DB_PATH = <span class="st">"reviews_bot.db"</span>
+
+<span class="kw">async def</span> <span class="fn">init_db</span>():
+    <span class="kw">async with</span> aiosqlite.connect(DB_PATH) <span class="kw">as</span> db:
+        <span class="kw">await</span> db.execute(<span class="st">"""
+            CREATE TABLE IF NOT EXISTS orders (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                plan_id INTEGER NOT NULL,
+                charge_id TEXT UNIQUE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )"""</span>)
+        <span class="kw">await</span> db.execute(<span class="st">"""
+            CREATE TABLE IF NOT EXISTS files (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                plan_id INTEGER NOT NULL,
+                file_id TEXT NOT NULL,
+                is_sent INTEGER DEFAULT 0,
+                uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )"""</span>)
+        <span class="kw">await</span> db.commit()
+
+<span class="kw">async def</span> <span class="fn">get_file_for_plan</span>(plan_id: <span class="fn">int</span>):
+    <span class="kw">async with</span> aiosqlite.connect(DB_PATH) <span class="kw">as</span> db:
+        db.row_factory = aiosqlite.Row
+        <span class="kw">async with</span> db.execute(
+            <span class="st">"SELECT * FROM files WHERE plan_id = ? AND is_sent = 0 ORDER BY id LIMIT 1"</span>,
+            (plan_id,)
+        ) <span class="kw">as</span> cur:
+            <span class="kw">return await</span> cur.fetchone()
+
+<span class="kw">async def</span> <span class="fn">save_order</span>(user_id: <span class="fn">int</span>, plan_id: <span class="fn">int</span>, charge_id: <span class="fn">str</span>) -> <span class="fn">int</span>:
+    <span class="kw">async with</span> aiosqlite.connect(DB_PATH) <span class="kw">as</span> db:
+        cur = <span class="kw">await</span> db.execute(
+            <span class="st">"INSERT INTO orders (user_id, plan_id, charge_id) VALUES (?,?,?)"</span>,
+            (user_id, plan_id, charge_id)
+        )
+        <span class="kw">await</span> db.commit()
+        <span class="kw">return</span> cur.lastrowid
+
+<span class="kw">async def</span> <span class="fn">mark_file_sent</span>(file_id: <span class="fn">int</span>):
+    <span class="kw">async with</span> aiosqlite.connect(DB_PATH) <span class="kw">as</span> db:
+        <span class="kw">await</span> db.execute(<span class="st">"UPDATE files SET is_sent = 1 WHERE id = ?"</span>, (file_id,))
+        <span class="kw">await</span> db.commit()
+
+<span class="kw">async def</span> <span class="fn">get_user_orders</span>(user_id: <span class="fn">int</span>):
+    <span class="kw">async with</span> aiosqlite.connect(DB_PATH) <span class="kw">as</span> db:
+        db.row_factory = aiosqlite.Row
+        <span class="kw">async with</span> db.execute(
+            <span class="st">"SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT 10"</span>,
+            (user_id,)
+        ) <span class="kw">as</span> cur:
+            <span class="kw">return await</span> cur.fetchall()</pre>
+  </div>
+
+  <a href="../index.html" class="back-link">← Назад к портфолио</a>
+</div>
+
+<script>
+function copyCode(btn, id) {
+  const text = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'copied!';
+    btn.style.color = 'var(--green)';
+    setTimeout(() => { btn.textContent = 'copy'; btn.style.color = ''; }, 2000);
+  });
+}
+</script>
+</body>
+</html>

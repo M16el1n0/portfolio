@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iFix — Ремонт iPhone в городе</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #000000;
+    --bg2: #111111;
+    --bg3: #1a1a1a;
+    --border: rgba(255,255,255,0.1);
+    --text: #f5f5f7;
+    --muted: #888;
+    --accent: #0a84ff;
+    --accent2: #30d158;
+    --radius: 14px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--border);
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 clamp(1.5rem, 5vw, 5rem);
+  }
+
+  .nav-logo {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: -0.03em;
+  }
+
+  .nav-logo span { color: var(--accent); }
+
+  .nav-right { display: flex; align-items: center; gap: 1.5rem; }
+
+  .nav-cta {
+    background: var(--accent);
+    color: #fff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .nav-cta:hover { opacity: 0.85; }
+
+  .nav-phone { font-size: 13px; color: var(--muted); text-decoration: none; }
+  .nav-phone:hover { color: var(--text); }
+
+  /* HERO */
+  .hero {
+    padding: 8rem clamp(1.5rem, 5vw, 5rem) 5rem;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 50px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse, rgba(10,132,255,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-sup {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    padding: 6px 16px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+  }
+
+  .status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent2);
+    box-shadow: 0 0 6px var(--accent2);
+    animation: glow 2s infinite;
+  }
+
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 4px var(--accent2); }
+    50% { box-shadow: 0 0 10px var(--accent2); }
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1.06;
+    margin-bottom: 1.25rem;
+    background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.6) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: clamp(15px, 2vw, 18px);
+    color: var(--muted);
+    max-width: 500px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+  }
+
+  .hero-ctas {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 4rem;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { background: #0070f3; transform: scale(1.02); }
+
+  .btn-secondary {
+    background: var(--bg3);
+    color: var(--text);
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-block;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { background: #222; }
+
+  /* PHONES */
+  .phones-strip {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 5rem;
+  }
+
+  .phone-chip {
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    background: transparent;
+    font-family: inherit;
+  }
+  .phone-chip:hover, .phone-chip.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(10,132,255,0.08);
+  }
+
+  /* PRICE TABLE */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 clamp(1.5rem, 5vw, 5rem); }
+
+  .section-wrap { padding: 5rem 0; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    text-align: center;
+  }
+
+  h2 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    text-align: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-sub {
+    text-align: center;
+    color: var(--muted);
+    font-size: 15px;
+    margin-bottom: 3rem;
+  }
+
+  .price-table {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .price-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+
+  .price-row:last-child { border-bottom: none; }
+  .price-row:hover { background: var(--bg3); }
+
+  .price-service { font-size: 14px; font-weight: 500; }
+  .price-time { font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .price-cost { font-size: 15px; font-weight: 600; color: var(--text); white-space: nowrap; text-align: right; }
+
+  .price-table-header {
+    background: var(--bg3);
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 1rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* MODEL SELECTOR */
+  .model-select-wrap {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .model-select-wrap label { font-size: 13px; color: var(--muted); }
+
+  select {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    padding: 8px 12px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+  }
+  select:focus { border-color: var(--accent); }
+
+  /* ADVANTAGES */
+  .adv-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .adv-item {
+    background: var(--bg2);
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+
+  .adv-num {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+  }
+
+  .adv-label { font-size: 13px; color: var(--muted); line-height: 1.45; }
+
+  /* GUARANTEE */
+  .guarantee-card {
+    background: linear-gradient(135deg, rgba(10,132,255,0.08) 0%, rgba(48,209,88,0.06) 100%);
+    border: 1px solid rgba(10,132,255,0.2);
+    border-radius: var(--radius);
+    padding: 2.5rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .guarantee-icon { font-size: 4rem; }
+
+  .guarantee-card h3 { font-size: 20px; font-weight: 600; margin-bottom: 0.5rem; }
+  .guarantee-card p { color: var(--muted); font-size: 14px; line-height: 1.65; }
+
+  /* CTA */
+  .cta-section {
+    text-align: center;
+    padding: 6rem clamp(1.5rem, 5vw, 5rem);
+    position: relative;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(10,132,255,0.1) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .cta-section h2 { margin-bottom: 0.75rem; }
+  .cta-section p { color: var(--muted); margin-bottom: 2.5rem; }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem clamp(1.5rem, 5vw, 5rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  @media (max-width: 640px) {
+    .price-row { grid-template-columns: 1fr auto; }
+    .price-time { display: none; }
+    .price-table-header { grid-template-columns: 1fr auto; }
+    .price-table-header span:nth-child(2) { display: none; }
+    .guarantee-card { grid-template-columns: 1fr; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">i<span>Fix</span></a>
+  <div class="nav-right">
+    <a href="tel:+79001234567" class="nav-phone">+7 (900) 123-45-67</a>
+    <a href="#prices" class="nav-cta">Узнать цену</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-sup">
+    <div class="status-dot"></div>
+    Принимаем сегодня · Работаем 9:00–21:00
+  </div>
+  <h1>Ремонт iPhone<br>за 30 минут</h1>
+  <p class="hero-sub">
+    Оригинальные и совместимые запчасти. Гарантия на детали и работу.
+    Бесплатная диагностика перед ремонтом.
+  </p>
+  <div class="hero-ctas">
+    <a href="#prices" class="btn-primary">Посмотреть цены</a>
+    <a href="https://t.me/ifixbot" class="btn-secondary">✈ Написать в Telegram</a>
+  </div>
+
+  <div class="phones-strip">
+    <button class="phone-chip active" onclick="filterModel(this, '16')">iPhone 16</button>
+    <button class="phone-chip" onclick="filterModel(this, '15')">iPhone 15</button>
+    <button class="phone-chip" onclick="filterModel(this, '14')">iPhone 14</button>
+    <button class="phone-chip" onclick="filterModel(this, '13')">iPhone 13</button>
+    <button class="phone-chip" onclick="filterModel(this, '12')">iPhone 12</button>
+    <button class="phone-chip" onclick="filterModel(this, '11')">iPhone 11</button>
+    <button class="phone-chip" onclick="filterModel(this, 'xs')">iPhone XS/X</button>
+    <button class="phone-chip" onclick="filterModel(this, 'se')">iPhone SE</button>
+  </div>
+</div>
+
+<!-- ADV -->
+<div class="container">
+  <div class="adv-grid" style="margin-bottom: 5rem;">
+    <div class="adv-item">
+      <div class="adv-num">30 мин</div>
+      <div class="adv-label">среднее время<br>ремонта</div>
+    </div>
+    <div class="adv-item">
+      <div class="adv-num">6 мес</div>
+      <div class="adv-label">гарантия на<br>все работы</div>
+    </div>
+    <div class="adv-item">
+      <div class="adv-num">0 ₽</div>
+      <div class="adv-label">диагностика<br>при ремонте</div>
+    </div>
+    <div class="adv-item">
+      <div class="adv-num">500+</div>
+      <div class="adv-label">ремонтов<br>в месяц</div>
+    </div>
+  </div>
+</div>
+
+<!-- PRICES -->
+<div class="section-wrap" id="prices">
+  <div class="container">
+    <p class="section-label">Прайс-лист</p>
+    <h2>Цены на ремонт</h2>
+    <p class="section-sub">Выберите модель — цены обновятся автоматически</p>
+
+    <div class="model-select-wrap">
+      <label>Модель:</label>
+      <select id="modelSelect" onchange="updatePrices()">
+        <option value="16">iPhone 16 / 16 Plus</option>
+        <option value="15">iPhone 15 / 15 Plus</option>
+        <option value="14">iPhone 14 / 14 Plus</option>
+        <option value="13">iPhone 13 / 13 mini</option>
+        <option value="12">iPhone 12 / 12 mini</option>
+        <option value="11">iPhone 11</option>
+        <option value="xs">iPhone XS / X</option>
+        <option value="se">iPhone SE (2/3 gen)</option>
+      </select>
+    </div>
+
+    <div class="price-table">
+      <div class="price-table-header">
+        <span>Услуга</span>
+        <span>Время</span>
+        <span style="text-align:right;">Цена</span>
+      </div>
+      <div id="priceRows"></div>
+    </div>
+  </div>
+</div>
+
+<!-- GUARANTEE -->
+<div class="container" style="padding-bottom: 5rem;">
+  <div class="guarantee-card">
+    <div class="guarantee-icon">🛡</div>
+    <div>
+      <h3>Гарантия 6 месяцев на всё</h3>
+      <p>
+        Даём письменную гарантию на запчасти и работу. Если в течение 6 месяцев возникнет неисправность,
+        связанная с нашим ремонтом — устраним бесплатно. Никаких оговорок.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>Записаться на ремонт</h2>
+  <p>Удобнее всего — написать в Telegram. Ответим моментально, запишем на время.</p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <a href="https://t.me/ifixbot" class="btn-primary">✈ Написать в Telegram</a>
+    <a href="tel:+79001234567" class="btn-secondary">📞 Позвонить</a>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 iFix — Ремонт iPhone</p>
+  <p>Работаем ежедневно 9:00–21:00</p>
+</footer>
+
+<script>
+const priceData = {
+  '16': [
+    { s: 'Замена экрана (OLED)', t: '30–40 мин', p: '6 900 ₽' },
+    { s: 'Замена аккумулятора', t: '20–30 мин', p: '3 400 ₽' },
+    { s: 'Замена стекла задней крышки', t: '40–60 мин', p: '4 500 ₽' },
+    { s: 'Замена разъёма зарядки', t: '40 мин', p: '2 800 ₽' },
+    { s: 'Ремонт микрофона / динамика', t: '30 мин', p: '2 200 ₽' },
+    { s: 'Замена камеры', t: '40–50 мин', p: '4 200 ₽' },
+    { s: 'Диагностика', t: '15 мин', p: 'Бесплатно' },
+  ],
+  '15': [
+    { s: 'Замена экрана (OLED)', t: '30–40 мин', p: '5 800 ₽' },
+    { s: 'Замена аккумулятора', t: '20–30 мин', p: '2 900 ₽' },
+    { s: 'Замена стекла задней крышки', t: '40–60 мин', p: '4 000 ₽' },
+    { s: 'Замена разъёма зарядки', t: '40 мин', p: '2 500 ₽' },
+    { s: 'Ремонт микрофона / динамика', t: '30 мин', p: '2 000 ₽' },
+    { s: 'Замена камеры', t: '40–50 мин', p: '3 800 ₽' },
+    { s: 'Диагностика', t: '15 мин', p: 'Бесплатно' },
+  ],
+  '14': [
+    { s: 'Замена экрана (OLED)', t: '30–40 мин', p: '4 900 ₽' },
+    { s: 'Замена аккумулятора', t: '20–30 мин', p: '2 400 ₽' },
+    { s: 'Замена стекла задней крышки', t: '40–60 мин', p: '3 500 ₽' },
+    { s: 'Замена разъёма зарядки', t: '40 мин', p: '2 200 ₽' },
+    { s: 'Ремонт микрофона / динамика', t: '30 мин', p: '1 800 ₽' },
+    { s: 'Замена камеры', t: '40–50 мин', p: '3 200 ₽' },
+    { s: 'Диагностика', t: '15 мин', p: 'Бесплатно' },
+  ],
+  '13': [
+    { s: 'Замена экрана (OLED)', t: '30 мин', p: '3 800 ₽' },
+    { s: 'Замена аккумулятора', t: '20 мин', p: '1 900 ₽' },
+    { s: 'Замена стекла задней крышки', t: '40 мин', p: '2 800 ₽' },
+    { s: 'Замена разъёма зарядки', t: '30 мин', p: '1 900 ₽' },
+    { s: 'Ремонт микрофона / динамика', t: '25 мин', p: '1 500 ₽' },
+    { s: 'Замена камеры', t: '40 мин', p: '2 600 ₽' },
+    { s: 'Диагностика', t: '15 мин', p: 'Бесплатно' },
+  ],
+  '12': [
+    { s: 'Замена экрана (OLED)', t: '30 мин', p: '3 200 ₽' },
+    { s: 'Замена аккумулятора', t: '20 мин', p: '1 600 ₽' },
+    { s: 'Замена стекла задней крышки', t: '40 мин', p: '2 400 ₽' },
+    { s: 'Замена разъёма зарядки', t: '30 мин', p: '1 700 ₽' },
+    { s: 'Ремонт микрофона / динамика', t: '25 мин', p: '1 400 ₽' },
+    { s: 'Замена камеры', t: '40 мин', p: '2 200 ₽' },
+    { s: 'Диагностика', t: '15 мин', p: 'Бесплатно' },
+  ],
+  '11': [
+    { s: 'Замена экрана (LCD)', t: '30 мин', p: '2 400 ₽' },
+    { s: 'Замена аккумулятора', t: '20 мин', p: '1 400 ₽' },
+    { s: 'Замена стекла задней крышки', t: '40 мин', p: '2 000 ₽' },
+    { s: 'Замена разъёма зарядки', t: '30 мин', p: '1 500 ₽' },
+    { s: 'Ремонт микрофона / динамика', t: '25 мин', p: '1 200 ₽' },
+    { s: 'Замена камеры', t: '40 мин', p: '1 900 ₽' },
+    { s: 'Диагностика', t: '15 мин', p: 'Бесплатно' },
+  ],
+  'xs': [
+    { s: 'Замена экрана (OLED)', t: '30 мин', p: '2 800 ₽' },
+    { s: 'Замена аккумулятора', t: '20 мин', p: '1 300 ₽' },
+    { s: 'Замена стекла задней крышки', t: '40 мин', p: '1 800 ₽' },
+    { s: 'Замена разъёма зарядки', t: '30 мин', p: '1 400 ₽' },
+    { s: 'Ремонт микрофона / динамика', t: '25 мин', p: '1 100 ₽' },
+    { s: 'Замена камеры', t: '40 мин', p: '1 700 ₽' },
+    { s: 'Диагностика', t: '15 мин', p: 'Бесплатно' },
+  ],
+  'se': [
+    { s: 'Замена экрана (LCD)', t: '20 мин', p: '1 600 ₽' },
+    { s: 'Замена аккумулятора', t: '15 мин', p: '1 100 ₽' },
+    { s: 'Замена стекла задней крышки', t: '30 мин', p: '1 400 ₽' },
+    { s: 'Замена разъёма зарядки', t: '25 мин', p: '1 200 ₽' },
+    { s: 'Ремонт микрофона / динамика', t: '20 мин', p: '900 ₽' },
+    { s: 'Замена камеры', t: '30 мин', p: '1 300 ₽' },
+    { s: 'Диагностика', t: '15 мин', p: 'Бесплатно' },
+  ],
+};
+
+function updatePrices() {
+  const model = document.getElementById('modelSelect').value;
+  const rows = priceData[model] || priceData['16'];
+  document.getElementById('priceRows').innerHTML = rows.map(r => `
+    <div class="price-row">
+      <span class="price-service">${r.s}</span>
+      <span class="price-time">${r.t}</span>
+      <span class="price-cost">${r.p}</span>
+    </div>
+  `).join('');
+}
+
+function filterModel(btn, model) {
+  document.querySelectorAll('.phone-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const sel = document.getElementById('modelSelect');
+  sel.value = model;
+  updatePrices();
+}
+
+updatePrices();
+</script>
+</body>
+</html>

@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>КомпМастер — Ремонт и сборка компьютеров</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f7f6f3;
+    --white: #ffffff;
+    --text: #1a1a1a;
+    --muted: #6b6b6b;
+    --border: #e4e2dd;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --accent-dark: #1d4ed8;
+    --warn: #f59e0b;
+    --green: #16a34a;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 clamp(1.5rem, 5vw, 5rem);
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky; top: 0; z-index: 50;
+  }
+
+  .logo {
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--text);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .nav-phone {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 5rem clamp(1.5rem, 5vw, 5rem);
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 4rem;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+  }
+
+  .badge-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  h1 {
+    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-sub {
+    color: var(--muted);
+    font-size: 16px;
+    max-width: 460px;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-ctas { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: all 0.18s;
+  }
+
+  .btn-blue { background: var(--accent); color: #fff; }
+  .btn-blue:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+
+  .btn-ghost { background: transparent; color: var(--text); border: 1.5px solid var(--border); }
+  .btn-ghost:hover { border-color: #999; }
+
+  /* TRUST BADGES */
+  .trust {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .trust-icon {
+    font-size: 16px;
+  }
+
+  /* FORM CARD */
+  .form-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.75rem;
+  }
+
+  .form-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+
+  .form-card p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group { margin-bottom: 1rem; }
+
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 5px;
+    letter-spacing: 0.02em;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 0.65rem 0.9rem;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--bg);
+    transition: border-color 0.15s;
+    outline: none;
+    appearance: none;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent);
+    background: var(--white);
+  }
+
+  textarea { resize: vertical; min-height: 80px; }
+
+  .form-submit {
+    width: 100%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.85rem;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: all 0.18s;
+  }
+
+  .form-submit:hover { background: var(--accent-dark); }
+
+  .form-note {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 0.75rem;
+  }
+
+  /* SERVICES */
+  .container { max-width: 1200px; margin: 0 auto; padding: 5rem clamp(1.5rem, 5vw, 5rem); }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  h2 {
+    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-sub {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 500px;
+    margin-bottom: 3rem;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .service-card {
+    background: var(--white);
+    padding: 1.75rem;
+    transition: background 0.15s;
+  }
+
+  .service-card:hover { background: #fafaf8; }
+
+  .service-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: var(--accent-light);
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    margin-bottom: 1rem;
+  }
+
+  .service-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+
+  .service-card p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .service-price {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .service-price span {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  /* CALCULATOR */
+  .calc-wrap {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2.5rem;
+    max-width: 680px;
+  }
+
+  .calc-wrap h3 { font-size: 18px; font-weight: 600; margin-bottom: 0.5rem; }
+  .calc-wrap > p { color: var(--muted); font-size: 14px; margin-bottom: 2rem; }
+
+  .calc-row { margin-bottom: 1.25rem; }
+  .calc-row label { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+
+  .calc-result {
+    background: var(--accent-light);
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    padding: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+  }
+
+  .calc-result-label { font-size: 14px; color: var(--muted); }
+  .calc-result-price { font-size: 22px; font-weight: 700; color: var(--accent); }
+
+  /* REVIEWS */
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+
+  .review-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+  }
+
+  .review-stars { color: var(--warn); font-size: 14px; margin-bottom: 0.75rem; letter-spacing: 2px; }
+
+  .review-text {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.65;
+    margin-bottom: 1rem;
+  }
+
+  .reviewer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .reviewer-avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .reviewer-name { font-size: 13px; font-weight: 500; }
+  .reviewer-date { font-size: 11px; color: var(--muted); }
+
+  /* CTA BAND */
+  .cta-band {
+    background: var(--text);
+    color: #fff;
+    padding: 4rem clamp(1.5rem, 5vw, 5rem);
+    text-align: center;
+  }
+
+  .cta-band h2 { color: #fff; margin-bottom: 0.75rem; }
+  .cta-band p { color: rgba(255,255,255,0.6); font-size: 15px; margin-bottom: 2rem; }
+
+  footer {
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    padding: 1.5rem clamp(1.5rem, 5vw, 5rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer p { font-size: 12px; color: var(--muted); }
+
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; padding: 3rem 1.5rem; gap: 2.5rem; }
+    .form-card { order: -1; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">
+    <div class="logo-dot"></div>
+    КомпМастер
+  </a>
+  <a href="tel:+79001234567" class="nav-phone">+7 (900) 123-45-67</a>
+</nav>
+
+<!-- HERO -->
+<div style="background: var(--white); border-bottom: 1px solid var(--border);">
+  <div class="hero">
+    <div>
+      <div class="hero-badge">
+        <div class="badge-dot"></div>
+        Принимаем заказы сегодня
+      </div>
+      <h1>Ремонт и сборка<br>компьютеров</h1>
+      <p class="hero-sub">
+        Диагностика за 30 минут. Ремонт в день обращения. Гарантия 6 месяцев на все виды работ.
+      </p>
+      <div class="hero-ctas">
+        <a href="#calc" class="btn btn-blue">Рассчитать стоимость</a>
+        <a href="#services" class="btn btn-ghost">Список услуг</a>
+      </div>
+      <div class="trust">
+        <div class="trust-item"><span class="trust-icon">✓</span> Гарантия 6 месяцев</div>
+        <div class="trust-item"><span class="trust-icon">✓</span> Бесплатная диагностика</div>
+        <div class="trust-item"><span class="trust-icon">✓</span> Выезд на дом</div>
+      </div>
+    </div>
+    <div class="form-card">
+      <h3>Оставить заявку</h3>
+      <p>Перезвоним в течение 15 минут</p>
+      <div class="form-group">
+        <label>Ваше имя</label>
+        <input type="text" placeholder="Иван">
+      </div>
+      <div class="form-group">
+        <label>Телефон</label>
+        <input type="tel" placeholder="+7 (___) ___-__-__">
+      </div>
+      <div class="form-group">
+        <label>Проблема</label>
+        <select>
+          <option value="">Выберите тип работы</option>
+          <option>Ремонт компьютера / ноутбука</option>
+          <option>Сборка нового ПК</option>
+          <option>Чистка от пыли</option>
+          <option>Установка Windows / ПО</option>
+          <option>Замена комплектующих</option>
+          <option>Другое</option>
+        </select>
+      </div>
+      <button class="form-submit" onclick="this.textContent='✓ Заявка отправлена!'; this.style.background='#16a34a'">
+        Отправить заявку
+      </button>
+      <p class="form-note">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности</p>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<div class="container" id="services">
+  <p class="section-label">Услуги</p>
+  <h2>Что мы делаем</h2>
+  <p class="section-sub">Полный спектр работ — от чистки до сборки игровых станций</p>
+
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🔧</div>
+      <h3>Диагностика</h3>
+      <p>Полная проверка системы, выявление неисправностей, заключение с рекомендациями.</p>
+      <div class="service-price">Бесплатно <span>при ремонте у нас</span></div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🖥</div>
+      <h3>Сборка ПК</h3>
+      <p>Сборка под ваш бюджет и задачи — работа, игры, монтаж. Подбор комплектующих.</p>
+      <div class="service-price">от 1 500 ₽ <span>+ стоимость деталей</span></div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🌀</div>
+      <h3>Чистка и замена TIM</h3>
+      <p>Удаление пыли, замена термопасты. Компьютер перестанет греться и тормозить.</p>
+      <div class="service-price">от 800 ₽</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">💿</div>
+      <h3>Установка ПО</h3>
+      <p>Windows, антивирус, офис, драйверы. Чистая установка без мусорного ПО.</p>
+      <div class="service-price">от 600 ₽</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">⚡</div>
+      <h3>Апгрейд</h3>
+      <p>Замена HDD на SSD, добавление RAM, новая видеокарта. Подберём совместимые детали.</p>
+      <div class="service-price">от 500 ₽ <span>работа</span></div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🏠</div>
+      <h3>Выезд на дом</h3>
+      <p>Мастер приедет в удобное время. Оплата только за работу.</p>
+      <div class="service-price">+500 ₽ <span>к стоимости работы</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- CALCULATOR -->
+<div style="background: var(--bg); padding: 0 0 5rem;">
+  <div class="container" style="padding-top: 0;" id="calc">
+    <p class="section-label">Калькулятор</p>
+    <h2>Примерная стоимость</h2>
+    <p class="section-sub">Выберите параметры — получите ориентировочную цену</p>
+
+    <div class="calc-wrap">
+      <div class="calc-row">
+        <label>Тип устройства</label>
+        <select id="device" onchange="calcPrice()">
+          <option value="0">Стационарный ПК</option>
+          <option value="300">Ноутбук</option>
+          <option value="200">Моноблок</option>
+        </select>
+      </div>
+      <div class="calc-row">
+        <label>Тип работы</label>
+        <select id="work" onchange="calcPrice()">
+          <option value="800">Чистка и замена термопасты</option>
+          <option value="600">Установка Windows / ПО</option>
+          <option value="1500">Диагностика и ремонт</option>
+          <option value="1500">Сборка / апгрейд</option>
+          <option value="500">Вирусы и оптимизация</option>
+        </select>
+      </div>
+      <div class="calc-row">
+        <label>Выезд на дом</label>
+        <select id="visit" onchange="calcPrice()">
+          <option value="0">Принесу сам</option>
+          <option value="500">Нужен выезд (+500 ₽)</option>
+        </select>
+      </div>
+      <div class="calc-result">
+        <div>
+          <div class="calc-result-label">Ориентировочная стоимость</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Точная цена — после диагностики</div>
+        </div>
+        <div class="calc-result-price" id="total-price">от 800 ₽</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEWS -->
+<div style="background: var(--white); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <p class="section-label">Отзывы</p>
+    <h2>Что говорят клиенты</h2>
+    <p class="section-sub" style="margin-bottom:2.5rem;">Реальные отзывы от наших заказчиков</p>
+
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Принёс ноутбук — жутко грелся и тормозил. Почистили, поменяли термопасту. Теперь летает. Быстро и недорого.</p>
+        <div class="reviewer">
+          <div class="reviewer-avatar" style="background:#eff6ff;color:#2563eb;">АС</div>
+          <div>
+            <div class="reviewer-name">Алексей С.</div>
+            <div class="reviewer-date">2 недели назад</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Собрали игровой ПК под мой бюджет. Подобрали всё грамотно, без переплат. Работает отлично, даю гарантию — доволен.</p>
+        <div class="reviewer">
+          <div class="reviewer-avatar" style="background:#f0fdf4;color:#16a34a;">МП</div>
+          <div>
+            <div class="reviewer-name">Михаил П.</div>
+            <div class="reviewer-date">1 месяц назад</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★☆</div>
+        <p class="review-text">Выехали домой, поставили Windows, всё настроили. Мастер вежливый, объяснил что делал. Немного ждала, но в целом всё хорошо.</p>
+        <div class="reviewer">
+          <div class="reviewer-avatar" style="background:#fef3c7;color:#d97706;">НК</div>
+          <div>
+            <div class="reviewer-name">Наталья К.</div>
+            <div class="reviewer-date">3 недели назад</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA BAND -->
+<div class="cta-band">
+  <h2>Есть вопрос или нужна срочная помощь?</h2>
+  <p>Звоните или пишите — ответим и запишем на удобное время</p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <a href="tel:+79001234567" class="btn btn-blue" style="font-size:15px;padding:0.9rem 2rem;">📞 Позвонить</a>
+    <a href="https://t.me/kompmaster" class="btn" style="background:rgba(255,255,255,0.1);color:#fff;font-size:15px;padding:0.9rem 2rem;border:1px solid rgba(255,255,255,0.2);">✈ Написать в Telegram</a>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 КомпМастер — Ремонт компьютеров</p>
+  <p>Ежедневно 9:00–21:00</p>
+</footer>
+
+<script>
+function calcPrice() {
+  const device = parseInt(document.getElementById('device').value);
+  const work = parseInt(document.getElementById('work').value);
+  const visit = parseInt(document.getElementById('visit').value);
+  const total = device + work + visit;
+  document.getElementById('total-price').textContent = 'от ' + total.toLocaleString('ru') + ' ₽';
+}
+</script>
+</body>
+</html>

@@ -469,7 +469,7 @@
   </h1>
   <p class="hero-sub fade-up delay-2">
     Разрабатываю Telegram-ботов на Python и лендинги под конкретные задачи —
-    магазины, казино, авто-рассылки, платформы. Без воды, с исходниками.
+    магазины, парсеры, реферальные системы, CRM. Без воды, сдаю в срок.
   </p>
   <div class="hero-actions fade-up delay-3">
     <a href="#projects" class="btn btn-primary">Посмотреть проекты</a>
@@ -503,42 +503,107 @@
 
   <div class="projects-grid">
 
-    <a href="projects/fleep-casino.html" class="project-card">
+    <div class="project-card" style="cursor:default;">
       <div class="card-top">
-        <div class="card-icon icon-game">🎰</div>
-        <span class="card-badge badge-game">Mini App</span>
-      </div>
-      <h3 class="card-title">Fleep Casino</h3>
-      <p class="card-desc">
-        Telegram Mini App с тремя играми: ракета, мины, кейсы. NFT-подарки, реферальная система,
-        aiohttp бэкенд. Полный игровой цикл от депозита до вывода.
-      </p>
-      <div class="card-tags">
-        <span class="tag">Python</span>
-        <span class="tag">aiohttp</span>
-        <span class="tag">aiogram</span>
-        <span class="tag">Mini App</span>
-      </div>
-      <span class="card-arrow">↗</span>
-    </a>
-
-    <a href="projects/review-shop-bot.html" class="project-card">
-      <div class="card-top">
-        <div class="card-icon icon-tg">🤖</div>
+        <div class="card-icon icon-tg">🛒</div>
         <span class="card-badge badge-bot">Telegram Bot</span>
       </div>
-      <h3 class="card-title">Бот продажи отзывов</h3>
+      <h3 class="card-title">Магазин-бот</h3>
       <p class="card-desc">
-        Продажа батчей текстов с отзывами по тарифам. Покупка через Stars/крипту,
-        автодоставка файлов, история заказов, панель управления для администратора.
+        Полноценный магазин с каталогом, корзиной, двумя вариантами оплаты — Stars и перевод на карту.
+        Мастер настройки заказа, AI-консультация, уведомления админу.
       </p>
       <div class="card-tags">
         <span class="tag">python-telegram-bot</span>
-        <span class="tag">SQLite</span>
         <span class="tag">Stars API</span>
+        <span class="tag">JSON DB</span>
       </div>
-      <span class="card-arrow">↗</span>
-    </a>
+    </div>
+
+    <div class="project-card" style="cursor:default;">
+      <div class="card-top">
+        <div class="card-icon icon-tg">🔍</div>
+        <span class="card-badge badge-bot">Telegram Bot</span>
+      </div>
+      <h3 class="card-title">Парсер фриланс-бирж</h3>
+      <p class="card-desc">
+        Авто-мониторинг заказов на FL.ru, Kwork, Freelancehunt, Weblancer, YouDo и Telegram-каналах.
+        Фильтрация по ключевым словам, уведомления в реальном времени.
+      </p>
+      <div class="card-tags">
+        <span class="tag">python-telegram-bot</span>
+        <span class="tag">httpx</span>
+        <span class="tag">BeautifulSoup</span>
+      </div>
+    </div>
+
+    <div class="project-card" style="cursor:default;">
+      <div class="card-top">
+        <div class="card-icon icon-tg">👥</div>
+        <span class="card-badge badge-bot">Telegram Bot</span>
+      </div>
+      <h3 class="card-title">Реферальный бот</h3>
+      <p class="card-desc">
+        Система заработка за подписку на каналы. Баланс, вывод Stars или рублями на карту,
+        управление каналами и наградами из админ-панели.
+      </p>
+      <div class="card-tags">
+        <span class="tag">python-telegram-bot</span>
+        <span class="tag">Stars API</span>
+        <span class="tag">ChatJoinRequest</span>
+      </div>
+    </div>
+
+    <div class="project-card" style="cursor:default;">
+      <div class="card-top">
+        <div class="card-icon icon-tg">📨</div>
+        <span class="card-badge badge-bot">Telegram Bot</span>
+      </div>
+      <h3 class="card-title">Бот пересылки постов</h3>
+      <p class="card-desc">
+        Автоматически пересылает сообщения из группы-источника в неограниченное количество каналов.
+        Добавление каналов на лету, два режима — с заявками и без, управление через команды.
+      </p>
+      <div class="card-tags">
+        <span class="tag">python-telegram-bot</span>
+        <span class="tag">JSON</span>
+        <span class="tag">Multi-channel</span>
+      </div>
+    </div>
+
+    <div class="project-card" style="cursor:default;">
+      <div class="card-top">
+        <div class="card-icon icon-tg">📡</div>
+        <span class="card-badge badge-bot">Telegram Bot</span>
+      </div>
+      <h3 class="card-title">Авто-рассылка по группам</h3>
+      <p class="card-desc">
+        Ищет чаты по ключевым словам, сам вступает (до 100 групп), рассылает сообщение,
+        парсит посты с фильтрацией. Связка aiogram + Telethon для обхода ограничений Bot API.
+      </p>
+      <div class="card-tags">
+        <span class="tag">aiogram</span>
+        <span class="tag">Telethon</span>
+        <span class="tag">SearchGlobal</span>
+      </div>
+    </div>
+
+    <div class="project-card" style="cursor:default;">
+      <div class="card-top">
+        <div class="card-icon icon-tg">⭐</div>
+        <span class="card-badge badge-bot">Telegram Bot</span>
+      </div>
+      <h3 class="card-title">Магазин Stars</h3>
+      <p class="card-desc">
+        Продажа Telegram Stars дешевле официальной цены. Пакеты со скидками,
+        оплата переводом на карту, ручное подтверждение, история заказов.
+      </p>
+      <div class="card-tags">
+        <span class="tag">python-telegram-bot</span>
+        <span class="tag">Stars API</span>
+        <span class="tag">JSON DB</span>
+      </div>
+    </div>
 
     <a href="projects/autorepair-landing.html" class="project-card">
       <div class="card-top">
@@ -575,6 +640,24 @@
       </div>
       <span class="card-arrow">↗</span>
     </a>
+
+    <div class="project-card" style="cursor:default;">
+      <div class="card-top">
+        <div class="card-icon icon-tg">💬</div>
+        <span class="card-badge badge-bot">Telegram Bot</span>
+      </div>
+      <h3 class="card-title">Рассылка по ЗК со строк</h3>
+      <p class="card-desc">
+        Рассылка личных сообщений по списку контактов из CSV через Telethon-аккаунты.
+        Мультиаккаунт, авторизация прямо в боте, настройка задержки, стоп на лету.
+      </p>
+      <div class="card-tags">
+        <span class="tag">python-telegram-bot</span>
+        <span class="tag">Telethon</span>
+        <span class="tag">CSV</span>
+        <span class="tag">Multi-account</span>
+      </div>
+    </div>
 
   </div>
 </section>

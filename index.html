@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>million.dev — Telegram боты и веб-разработка</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0c0c0f;
+    --bg2: #13131a;
+    --bg3: #1a1a24;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #e8e8f0;
+    --muted: #7a7a90;
+    --accent: #7c6ff7;
+    --accent2: #5b9cf6;
+    --green: #4ade80;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 clamp(1.5rem, 5vw, 4rem);
+    height: 60px;
+    background: rgba(12,12,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* SECTIONS */
+  section { padding: 6rem clamp(1.5rem, 5vw, 4rem); max-width: 1100px; margin: 0 auto; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 80px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-left: clamp(1.5rem, 5vw, 4rem);
+    padding-right: clamp(1.5rem, 5vw, 4rem);
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--green);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 24px; height: 1px;
+    background: var(--green);
+  }
+
+  h1 {
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-gradient {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    color: var(--muted);
+    max-width: 520px;
+    margin-bottom: 3rem;
+    line-height: 1.75;
+  }
+
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover { background: #6b5fe6; transform: translateY(-1px); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border2);
+  }
+  .btn-outline:hover { background: var(--bg3); }
+
+  .hero-scroll {
+    margin-top: 5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--muted);
+    font-size: 12px;
+    font-family: var(--mono);
+    letter-spacing: 0.05em;
+  }
+
+  .hero-scroll::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--muted), transparent);
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .stat {
+    padding: 2rem clamp(1.5rem, 5vw, 4rem);
+    border-right: 1px solid var(--border);
+  }
+  .stat:last-child { border-right: none; }
+
+  .stat-num {
+    font-size: 2.2rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: var(--mono);
+    letter-spacing: 0.04em;
+  }
+
+  /* SECTION HEADINGS */
+  .section-header { margin-bottom: 3rem; }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  h2 {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  /* PROJECTS GRID */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .project-card {
+    background: var(--bg);
+    padding: 2rem;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .project-card:hover { background: var(--bg2); }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .card-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  .icon-tg { background: rgba(124,111,247,0.15); color: var(--accent); }
+  .icon-web { background: rgba(91,156,246,0.15); color: var(--accent2); }
+  .icon-game { background: rgba(74,222,128,0.1); color: var(--green); }
+
+  .card-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .badge-bot { background: rgba(124,111,247,0.12); color: var(--accent); }
+  .badge-web { background: rgba(91,156,246,0.12); color: var(--accent2); }
+  .badge-game { background: rgba(74,222,128,0.1); color: var(--green); }
+
+  .card-title {
+    font-size: 1.05rem;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.65;
+    flex: 1;
+  }
+
+  .card-tags {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: auto;
+  }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--bg3);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  .card-arrow {
+    font-size: 12px;
+    color: var(--muted);
+    transition: color 0.2s, transform 0.2s;
+  }
+  .project-card:hover .card-arrow { color: var(--text); transform: translate(2px, -2px); }
+
+  /* SKILLS */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .skill-block {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .skill-block h4 {
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .skill-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .skill-list li {
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .skill-list li::before {
+    content: '';
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--border2);
+    flex-shrink: 0;
+  }
+
+  /* CONTACT */
+  .contact-wrap {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .contact-cta h2 { margin-bottom: 1rem; }
+
+  .contact-cta p {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 2rem;
+    line-height: 1.75;
+  }
+
+  .contact-links { display: flex; flex-direction: column; gap: 1rem; }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+  .contact-link:hover { border-color: var(--accent); background: rgba(124,111,247,0.05); }
+
+  .contact-link-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .contact-link-info { flex: 1; }
+  .contact-link-label { font-size: 11px; color: var(--muted); font-family: var(--mono); letter-spacing: 0.06em; }
+  .contact-link-val { font-size: 14px; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem clamp(1.5rem, 5vw, 4rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  footer p { font-size: 12px; color: var(--muted); font-family: var(--mono); }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    .stats-bar { grid-template-columns: 1fr; }
+    .stat { border-right: none; border-bottom: 1px solid var(--border); }
+    .contact-wrap { grid-template-columns: 1fr; gap: 2rem; padding: 2rem; }
+    nav .nav-links { display: none; }
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-up { animation: fadeUp 0.6s ease both; }
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.3s; }
+  .delay-4 { animation-delay: 0.4s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fade-up { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">million.dev</a>
+  <ul class="nav-links">
+    <li><a href="#projects">Проекты</a></li>
+    <li><a href="#skills">Стек</a></li>
+    <li><a href="#contact">Контакт</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="hero-eyebrow fade-up">доступен для заказов</p>
+  <h1 class="fade-up delay-1">
+    Telegram боты<br>
+    <span class="hero-gradient">и веб-сайты</span><br>
+    под ключ
+  </h1>
+  <p class="hero-sub fade-up delay-2">
+    Разрабатываю Telegram-ботов на Python и лендинги под конкретные задачи —
+    магазины, казино, авто-рассылки, платформы. Без воды, с исходниками.
+  </p>
+  <div class="hero-actions fade-up delay-3">
+    <a href="#projects" class="btn btn-primary">Посмотреть проекты</a>
+    <a href="#contact" class="btn btn-outline">Написать в Telegram</a>
+  </div>
+  <div class="hero-scroll fade-up delay-4">scroll</div>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat">
+    <div class="stat-num">10+</div>
+    <div class="stat-label">ботов в продакшне</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">3 дня</div>
+    <div class="stat-label">средний срок сдачи</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">Python / JS</div>
+    <div class="stat-label">основной стек</div>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-header">
+    <p class="eyebrow">Работы</p>
+    <h2>Выбранные проекты</h2>
+  </div>
+
+  <div class="projects-grid">
+
+    <a href="projects/fleep-casino.html" class="project-card">
+      <div class="card-top">
+        <div class="card-icon icon-game">🎰</div>
+        <span class="card-badge badge-game">Mini App</span>
+      </div>
+      <h3 class="card-title">Fleep Casino</h3>
+      <p class="card-desc">
+        Telegram Mini App с тремя играми: ракета, мины, кейсы. NFT-подарки, реферальная система,
+        aiohttp бэкенд. Полный игровой цикл от депозита до вывода.
+      </p>
+      <div class="card-tags">
+        <span class="tag">Python</span>
+        <span class="tag">aiohttp</span>
+        <span class="tag">aiogram</span>
+        <span class="tag">Mini App</span>
+      </div>
+      <span class="card-arrow">↗</span>
+    </a>
+
+    <a href="projects/review-shop-bot.html" class="project-card">
+      <div class="card-top">
+        <div class="card-icon icon-tg">🤖</div>
+        <span class="card-badge badge-bot">Telegram Bot</span>
+      </div>
+      <h3 class="card-title">Бот продажи отзывов</h3>
+      <p class="card-desc">
+        Продажа батчей текстов с отзывами по тарифам. Покупка через Stars/крипту,
+        автодоставка файлов, история заказов, панель управления для администратора.
+      </p>
+      <div class="card-tags">
+        <span class="tag">python-telegram-bot</span>
+        <span class="tag">SQLite</span>
+        <span class="tag">Stars API</span>
+      </div>
+      <span class="card-arrow">↗</span>
+    </a>
+
+    <a href="projects/autorepair-landing.html" class="project-card">
+      <div class="card-top">
+        <div class="card-icon icon-web">🖥</div>
+        <span class="card-badge badge-web">Landing</span>
+      </div>
+      <h3 class="card-title">Лендинг: ремонт ПК</h3>
+      <p class="card-desc">
+        Продающий одностраничник для сервиса по ремонту и сборке компьютеров.
+        Форма заявки, прайс-калькулятор, отзывы. Адаптив, быстрая загрузка.
+      </p>
+      <div class="card-tags">
+        <span class="tag">HTML</span>
+        <span class="tag">CSS</span>
+        <span class="tag">JavaScript</span>
+      </div>
+      <span class="card-arrow">↗</span>
+    </a>
+
+    <a href="projects/iphone-repair-landing.html" class="project-card">
+      <div class="card-top">
+        <div class="card-icon icon-web">📱</div>
+        <span class="card-badge badge-web">Landing</span>
+      </div>
+      <h3 class="card-title">Лендинг: ремонт iPhone</h3>
+      <p class="card-desc">
+        Лендинг для мастерской iPhone-ремонта. Динамические тарифы по моделям,
+        счётчик заявок, интеграция с Telegram для лидов.
+      </p>
+      <div class="card-tags">
+        <span class="tag">HTML</span>
+        <span class="tag">CSS</span>
+        <span class="tag">JavaScript</span>
+      </div>
+      <span class="card-arrow">↗</span>
+    </a>
+
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-header">
+    <p class="eyebrow">Технологии</p>
+    <h2>Стек</h2>
+  </div>
+
+  <div class="skills-grid">
+    <div class="skill-block">
+      <h4>Telegram боты</h4>
+      <ul class="skill-list">
+        <li>python-telegram-bot</li>
+        <li>aiogram 3.x</li>
+        <li>Telegram Stars API</li>
+        <li>Mini Apps (WebApp)</li>
+        <li>Bot API Webhooks</li>
+      </ul>
+    </div>
+    <div class="skill-block">
+      <h4>Бэкенд</h4>
+      <ul class="skill-list">
+        <li>Python 3.11+</li>
+        <li>aiohttp / FastAPI</li>
+        <li>SQLite / PostgreSQL</li>
+        <li>asyncio</li>
+        <li>Redis (очереди)</li>
+      </ul>
+    </div>
+    <div class="skill-block">
+      <h4>Фронтенд</h4>
+      <ul class="skill-list">
+        <li>HTML5 / CSS3</li>
+        <li>Vanilla JavaScript</li>
+        <li>Адаптивная вёрстка</li>
+        <li>CSS анимации</li>
+        <li>Telegram WebApp JS SDK</li>
+      </ul>
+    </div>
+    <div class="skill-block">
+      <h4>Деплой</h4>
+      <ul class="skill-list">
+        <li>VPS (Linux)</li>
+        <li>systemd / screen</li>
+        <li>Nginx</li>
+        <li>GitHub</li>
+        <li>Docker (базово)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-wrap">
+    <div class="contact-cta">
+      <p class="eyebrow">Контакт</p>
+      <h2>Готов взяться<br>за ваш проект</h2>
+      <p>Пишите в Telegram — отвечаю быстро. Расскажите задачу, обсудим сроки и стоимость без лишних формальностей.</p>
+      <a href="https://t.me/m16el1n0" class="btn btn-primary" target="_blank">Написать в Telegram →</a>
+    </div>
+    <div class="contact-links">
+      <a href="https://t.me/m16el1n0" class="contact-link" target="_blank">
+        <div class="contact-link-icon" style="background:rgba(124,111,247,0.12); color:var(--accent);">✈</div>
+        <div class="contact-link-info">
+          <div class="contact-link-label">Telegram</div>
+          <div class="contact-link-val">@m16el1n0</div>
+        </div>
+        <span style="color:var(--muted);font-size:12px;">↗</span>
+      </a>
+      <a href="https://github.com/m16el1n0" class="contact-link" target="_blank">
+        <div class="contact-link-icon" style="background:rgba(255,255,255,0.05); color:var(--text);">⌥</div>
+        <div class="contact-link-info">
+          <div class="contact-link-label">GitHub</div>
+          <div class="contact-link-val">github.com/m16el1n0</div>
+        </div>
+        <span style="color:var(--muted);font-size:12px;">↗</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 million.dev</p>
+  <p>Telegram боты · Веб-разработка</p>
+</footer>
+
+</body>
+</html>

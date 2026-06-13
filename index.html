@@ -81,10 +81,29 @@
   }
   .hero-bg {
     position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    background: radial-gradient(ellipse 700px 500px at 20% 40%, rgba(124,111,247,0.07) 0%, transparent 70%),
-                radial-gradient(ellipse 500px 400px at 80% 20%, rgba(91,156,246,0.05) 0%, transparent 70%);
+    overflow: hidden;
   }
-  [data-theme="light"] .hero-bg { background: radial-gradient(ellipse 700px 500px at 20% 40%, rgba(124,111,247,0.05) 0%, transparent 70%); }
+  .hero-bg::before, .hero-bg::after {
+    content: ''; position: absolute; border-radius: 50%;
+    filter: blur(80px); animation: drift 12s ease-in-out infinite alternate;
+  }
+  .hero-bg::before {
+    width: 700px; height: 500px; top: -100px; left: -100px;
+    background: radial-gradient(ellipse, rgba(124,111,247,0.09) 0%, transparent 70%);
+  }
+  .hero-bg::after {
+    width: 500px; height: 400px; bottom: 10%; right: 5%;
+    background: radial-gradient(ellipse, rgba(91,156,246,0.07) 0%, transparent 70%);
+    animation-delay: -6s; animation-duration: 15s;
+  }
+  @keyframes drift {
+    0%   { transform: translate(0,0) scale(1); }
+    33%  { transform: translate(60px,40px) scale(1.05); }
+    66%  { transform: translate(-30px,60px) scale(0.97); }
+    100% { transform: translate(40px,-30px) scale(1.03); }
+  }
+  [data-theme="light"] .hero-bg::before { background: radial-gradient(ellipse, rgba(124,111,247,0.06) 0%, transparent 70%); }
+  [data-theme="light"] .hero-bg::after  { background: radial-gradient(ellipse, rgba(91,156,246,0.05) 0%, transparent 70%); }
   .hero > * { position: relative; z-index: 1; }
 
   .hero-eyebrow { font-family: var(--mono); font-size: 12px; color: var(--green); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
@@ -226,6 +245,7 @@
       <li><a href="#projects">Проекты</a></li>
       <li><a href="#how">Как работаю</a></li>
       <li><a href="#pricing">Цены</a></li>
+      <li><a href="#calc">Калькулятор</a></li>
       <li><a href="#bots-pricing">Готовые боты</a></li>
       <li><a href="#reviews">Отзывы</a></li>
       <li><a href="#contact">Контакт</a></li>
@@ -506,6 +526,137 @@
     </div>
   </div>
 </section>
+
+<!-- CALCULATOR -->
+<section id="calc" style="padding-top:0;">
+  <div class="section-header reveal">
+    <p class="eyebrow">Калькулятор</p>
+    <h2>Посчитать стоимость</h2>
+  </div>
+
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:2rem;max-width:640px;" class="reveal">
+
+    <div style="margin-bottom:1.25rem;">
+      <div style="font-size:12px;color:var(--muted);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.6rem;">Тип работы</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.5rem;" id="calcType">
+        <button class="calc-chip active" onclick="setType(this,'bot')">🤖 Бот</button>
+        <button class="calc-chip" onclick="setType(this,'site')">🌐 Сайт</button>
+        <button class="calc-chip" onclick="setType(this,'parser')">🔍 Парсер</button>
+      </div>
+    </div>
+
+    <div id="botOptions">
+      <div style="font-size:12px;color:var(--muted);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.6rem;">Тип бота</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.25rem;" id="botTypeChips">
+        <button class="calc-chip active" onclick="setBotType(this,'simple')">Простой бот</button>
+        <button class="calc-chip" onclick="setBotType(this,'shop')">Магазин</button>
+        <button class="calc-chip" onclick="setBotType(this,'broadcast')">Рассылка</button>
+        <button class="calc-chip" onclick="setBotType(this,'ref')">Реферальный</button>
+      </div>
+      <div style="font-size:12px;color:var(--muted);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.6rem;">Дополнительно</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.25rem;">
+        <button class="calc-chip toggle bot-feat" onclick="toggleFeature(this,200)">💳 Оплата Stars</button>
+        <button class="calc-chip toggle bot-feat" onclick="toggleFeature(this,200)">🏦 Перевод на карту</button>
+        <button class="calc-chip toggle bot-feat" onclick="toggleFeature(this,300)">🗄 База данных</button>
+        <button class="calc-chip toggle bot-feat" onclick="toggleFeature(this,200)">👑 Админ-панель</button>
+        <button class="calc-chip toggle bot-feat" onclick="toggleFeature(this,300)">📢 Рассылка юзерам</button>
+        <button class="calc-chip toggle bot-feat" onclick="toggleFeature(this,400)">🤝 Реф. система</button>
+        <button class="calc-chip toggle bot-feat" onclick="toggleFeature(this,300)">🔗 Telethon</button>
+      </div>
+      <div id="selfEmpBlock" style="display:none;padding:1rem;background:rgba(251,191,36,0.07);border:1px solid rgba(251,191,36,0.2);border-radius:10px;margin-bottom:1.25rem;">
+        <div style="font-size:13px;font-weight:500;margin-bottom:.4rem;">⚠️ Для платёжки нужна самозанятость</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:.75rem;">Если нет — сделаем через ручной приём переводов, это бесплатно.</div>
+        <div style="display:flex;gap:.5rem;">
+          <button class="calc-chip active" id="seYes" onclick="setSelfEmp(this,true)">✅ Есть</button>
+          <button class="calc-chip" id="seNo" onclick="setSelfEmp(this,false)">❌ Нет</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="siteOptions" style="display:none;">
+      <div style="font-size:12px;color:var(--muted);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.6rem;">Дополнительно</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.25rem;">
+        <button class="calc-chip toggle site-feat" onclick="toggleFeature(this,150)">📋 Форма заявки</button>
+        <button class="calc-chip toggle site-feat" onclick="toggleFeature(this,200)">🧮 Калькулятор</button>
+        <button class="calc-chip toggle site-feat" onclick="toggleFeature(this,300)">✨ Анимации</button>
+        <button class="calc-chip toggle site-feat" onclick="toggleFeature(this,300)">📄 Несколько страниц</button>
+        <button class="calc-chip toggle site-feat" onclick="toggleFeature(this,200)">📱 Telegram интеграция</button>
+      </div>
+    </div>
+
+    <div id="parserOptions" style="display:none;">
+      <div style="font-size:12px;color:var(--muted);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.6rem;">Дополнительно</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.25rem;">
+        <button class="calc-chip toggle parser-feat" onclick="toggleFeature(this,200)">📡 Несколько источников</button>
+        <button class="calc-chip toggle parser-feat" onclick="toggleFeature(this,150)">🔑 Фильтр по словам</button>
+        <button class="calc-chip toggle parser-feat" onclick="toggleFeature(this,200)">📬 Уведомления в бота</button>
+        <button class="calc-chip toggle parser-feat" onclick="toggleFeature(this,150)">📁 Вывод в файл/базу</button>
+        <button class="calc-chip toggle parser-feat" onclick="toggleFeature(this,300)">🔗 Telethon</button>
+      </div>
+    </div>
+
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+      <div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:4px;">Примерная стоимость</div>
+        <div style="font-size:2rem;font-weight:600;letter-spacing:-.03em;" id="calcPrice">от 300 ₽</div>
+      </div>
+      <a id="calcOrderBtn" href="https://t.me/m16el1n0?text=Хочу%20заказать%20бота" target="_blank" class="btn btn-primary">Обсудить заказ →</a>
+    </div>
+  </div>
+</section>
+
+<style>
+.calc-chip { padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;background:var(--bg3);border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all .18s;font-family:inherit; }
+.calc-chip:hover { border-color:var(--border2);color:var(--text); }
+.calc-chip.active { background:rgba(124,111,247,.15);border-color:rgba(124,111,247,.4);color:var(--accent); }
+</style>
+
+<script>
+var _calcFeatures = 0;
+var _calcType = 'bot';
+var _calcBotType = 'simple';
+var _basePrices = { bot:{simple:300,shop:1500,broadcast:500,ref:1500}, site:500, parser:500 };
+var _tgText = { bot:'бота', site:'сайт', parser:'парсер' };
+
+function _recalc() {
+  var base = _calcType === 'bot' ? _basePrices.bot[_calcBotType] : _basePrices[_calcType];
+  document.getElementById('calcPrice').textContent = 'от ' + (base + _calcFeatures).toLocaleString('ru') + ' ₽';
+  document.getElementById('calcOrderBtn').href = 'https://t.me/m16el1n0?text=' + encodeURIComponent('Хочу заказать ' + _tgText[_calcType]);
+}
+
+function setType(btn, type) {
+  document.querySelectorAll('#calcType .calc-chip').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  _calcType = type; _calcFeatures = 0;
+  document.querySelectorAll('.toggle').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('botOptions').style.display = type==='bot' ? '' : 'none';
+  document.getElementById('siteOptions').style.display = type==='site' ? '' : 'none';
+  document.getElementById('parserOptions').style.display = type==='parser' ? '' : 'none';
+  document.getElementById('selfEmpBlock').style.display = 'none';
+  _recalc();
+}
+
+function setBotType(btn, type) {
+  document.querySelectorAll('#botTypeChips .calc-chip').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  _calcBotType = type;
+  document.getElementById('selfEmpBlock').style.display = type==='shop' ? '' : 'none';
+  _recalc();
+}
+
+function toggleFeature(btn, price) {
+  var on = btn.classList.toggle('active');
+  _calcFeatures += on ? price : -price;
+  var hasPayment = document.querySelector('.bot-feat.active[onclick*="Stars"]') || document.querySelector('.bot-feat.active[onclick*="карту"]');
+  if (_calcType === 'bot') document.getElementById('selfEmpBlock').style.display = (hasPayment || _calcBotType==='shop') ? '' : 'none';
+  _recalc();
+}
+
+function setSelfEmp(btn, val) {
+  document.getElementById('seYes').classList.toggle('active', val);
+  document.getElementById('seNo').classList.toggle('active', !val);
+}
+</script>
 
 <!-- READY BOTS PRICING -->
 <section id="bots-pricing" style="padding-top:0;">

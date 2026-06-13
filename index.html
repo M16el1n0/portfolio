@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>million.dev — Telegram боты и веб-разработка</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -484,8 +485,8 @@
 <!-- STATS -->
 <div class="stats-bar">
   <div class="stat">
-    <div class="stat-num">10+</div>
-    <div class="stat-label">ботов в продакшне</div>
+    <div class="stat-num" id="counter-projects">0</div>
+    <div class="stat-label">выполненных проектов</div>
   </div>
   <div class="stat">
     <div class="stat-num">3 дня</div>
@@ -496,6 +497,25 @@
     <div class="stat-label">основной стек</div>
   </div>
 </div>
+
+<script>
+(function() {
+  var target = 34, el = document.getElementById('counter-projects');
+  var duration = 1200, start = null;
+  function step(ts) {
+    if (!start) start = ts;
+    var progress = Math.min((ts - start) / duration, 1);
+    var ease = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.floor(ease * target);
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = target;
+  }
+  var observer = new IntersectionObserver(function(entries) {
+    if (entries[0].isIntersecting) { requestAnimationFrame(step); observer.disconnect(); }
+  }, { threshold: 0.5 });
+  observer.observe(el);
+})();
+</script>
 
 <!-- PROJECTS -->
 <section id="projects">
